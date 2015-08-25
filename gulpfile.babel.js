@@ -162,7 +162,8 @@ gulp.task('wiredep', () => {
   'use strict';
   gulp.src('app/styles/*.scss')
     .pipe(wiredep({
-      ignorePath: /^(\.\.\/)+/
+      ignorePath: /^(\.\.\/)+/,
+      exclude: [ 'bootstrap-sass' ],
     }))
     .pipe(gulp.dest('app/styles'));
 
