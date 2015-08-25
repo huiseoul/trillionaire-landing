@@ -4,6 +4,7 @@
   "dependencies": {
     "animate.css": "~3.4.0",
     "bootstrap": "~3.3.5",
+    "components-font-awesome": "~4.4.0",
     "modernizr": "~2.8.1"
   },
   "overrides": {
