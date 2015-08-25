@@ -5,7 +5,7 @@
  */
 
 (function($) {
-    "use strict"; // Start of use strict
+    'use strict'; // Start of use strict
 
     // jQuery for page scrolling feature - requires jQuery Easing plugin
     $('a.page-scroll').bind('click', function(event) {
@@ -28,7 +28,7 @@
     });
 
     // Fit Text Plugin for Main Header
-    $("h1").fitText(
+    $('h1').fitText(
         1.2, {
             minFontSize: '35px',
             maxFontSize: '65px'
