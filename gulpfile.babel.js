@@ -10,8 +10,14 @@ const reload = browserSync.reload;
 
 gulp.task('styles', () => {
   'use strict';
-  return gulp.src('app/styles/*.css')
+  return gulp.src('app/styles/*.scss')
+    .pipe($.plumber())
     .pipe($.sourcemaps.init())
+    .pipe($.sass.sync({
+      outputStyle: 'expanded',
+      precision: 10,
+      includePaths: ['.']
+    }).on('error', $.sass.logError))
     .pipe($.autoprefixer({browsers: ['last 2 version']}))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/styles'))
@@ -117,7 +123,7 @@ gulp.task('serve', ['styles', 'fonts'], () => {
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
-  gulp.watch('app/styles/**/*.css', ['styles']);
+  gulp.watch('app/styles/**/*.scss', ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -154,6 +160,12 @@ gulp.task('serve:test', () => {
 // inject bower components
 gulp.task('wiredep', () => {
   'use strict';
+  gulp.src('app/styles/*.scss')
+    .pipe(wiredep({
+      ignorePath: /^(\.\.\/)+/
+    }))
+    .pipe(gulp.dest('app/styles'));
+
   gulp.src('app/*.html')
     .pipe(wiredep({
       exclude: ['bootstrap.js'],
