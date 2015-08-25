@@ -9,6 +9,7 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('styles', () => {
+  'use strict';
   return gulp.src('app/styles/*.css')
     .pipe($.sourcemaps.init())
     .pipe($.autoprefixer({browsers: ['last 1 version']}))
@@ -18,6 +19,7 @@ gulp.task('styles', () => {
 });
 
 function lint(files, options) {
+  'use strict';
   return () => {
     return gulp.src(files)
       .pipe(reload({stream: true, once: true}))
@@ -36,6 +38,7 @@ gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
 gulp.task('html', ['styles'], () => {
+  'use strict';
   const assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
 
   return gulp.src('app/*.html')
@@ -49,6 +52,7 @@ gulp.task('html', ['styles'], () => {
 });
 
 gulp.task('images', () => {
+  'use strict';
   return gulp.src('app/images/**/*')
     .pipe($.if($.if.isFile, $.cache($.imagemin({
       progressive: true,
@@ -65,6 +69,7 @@ gulp.task('images', () => {
 });
 
 gulp.task('fonts', () => {
+  'use strict';
   return gulp.src(require('main-bower-files')({
     filter: '**/*.{eot,svg,ttf,woff,woff2}'
   }).concat('app/fonts/**/*'))
@@ -73,6 +78,7 @@ gulp.task('fonts', () => {
 });
 
 gulp.task('extras', () => {
+  'use strict';
   return gulp.src([
     'app/*.*',
     '!app/*.html'
@@ -84,6 +90,7 @@ gulp.task('extras', () => {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 gulp.task('serve', ['styles', 'fonts'], () => {
+  'use strict';
   browserSync({
     notify: false,
     port: 9000,
@@ -108,6 +115,7 @@ gulp.task('serve', ['styles', 'fonts'], () => {
 });
 
 gulp.task('serve:dist', () => {
+  'use strict';
   browserSync({
     notify: false,
     port: 9000,
@@ -118,6 +126,7 @@ gulp.task('serve:dist', () => {
 });
 
 gulp.task('serve:test', () => {
+  'use strict';
   browserSync({
     notify: false,
     port: 9000,
@@ -136,6 +145,7 @@ gulp.task('serve:test', () => {
 
 // inject bower components
 gulp.task('wiredep', () => {
+  'use strict';
   gulp.src('app/*.html')
     .pipe(wiredep({
       exclude: ['bootstrap.js'],
@@ -145,9 +155,11 @@ gulp.task('wiredep', () => {
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+  'use strict';
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
 gulp.task('default', ['clean'], () => {
+  'use strict';
   gulp.start('build');
 });
