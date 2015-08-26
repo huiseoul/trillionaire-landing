@@ -197,11 +197,31 @@ gulp.task('gzip', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('publish', () => {
+gulp.task('publish', ['gzip'], () => {
   'use strict';
   gulp.src('dist/**/*')
     .pipe($.s3Upload(awsConfig)({
-      Bucket: 'www.trillionaire.co.kr', //  Required
-      ACL: 'public-read'       //  Needs to be user-defined
+      Bucket: 'www.trillionaire.co.kr',
+      ACL: 'public-read',
+      manualContentEncoding: (keyname) => {
+        var contentEncoding = null;
+        if(keyname.includes('.js') || keyname.includes('.css') || keyname.includes('.html')) {
+          contentEncoding = 'gzip';
+        }
+        return contentEncoding;
+      },
+      metadataMap: (keyname) => {
+        if(keyname.includes('.html')) {
+          return {
+            'Cache-Control': 'max-age=0'
+          };
+        } else if(keyname.includes('.js') || keyname.includes('.css')) {
+          return {
+            'Cache-Control': 'max-age=604800'
+          };
+        } else {
+          return;
+        }
+      }
     }));
 });
