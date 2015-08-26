@@ -190,7 +190,7 @@ gulp.task('default', ['clean'], () => {
 
 gulp.task('gzip', () => {
   'use strict';
-  gulp.src(['dist/**/*.js', 'dist/**/*.css', 'dist/**/*.html'])
+  return gulp.src(['dist/**/*.js', 'dist/**/*.css', 'dist/**/*.html'])
     .pipe($.gzip({
       append: false
     }))
@@ -215,12 +215,10 @@ gulp.task('publish', ['gzip'], () => {
           return {
             'Cache-Control': 'max-age=0'
           };
-        } else if(keyname.includes('.js') || keyname.includes('.css')) {
+        } else {
           return {
             'Cache-Control': 'max-age=604800'
           };
-        } else {
-          return;
         }
       }
     }));
