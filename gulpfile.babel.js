@@ -4,7 +4,7 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
-import {credentials as awsConfig} from './AWSConfig';
+import {credentials as credentials} from './aws-credentials';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -188,38 +188,30 @@ gulp.task('default', ['clean'], () => {
   gulp.start('build');
 });
 
-gulp.task('gzip', () => {
+gulp.task('publish', () => {
   'use strict';
-  return gulp.src(['dist/**/*.js', 'dist/**/*.css', 'dist/**/*.html'])
-    .pipe($.gzip({
-      append: false
-    }))
-    .pipe(gulp.dest('dist'));
-});
+  var publisher = $.awspublish.create(credentials);
 
-gulp.task('publish', ['gzip'], () => {
-  'use strict';
-  gulp.src('dist/**/*')
-    .pipe($.s3Upload(awsConfig)({
-      Bucket: 'www.trillionaire.co.kr',
-      ACL: 'public-read',
-      manualContentEncoding: (keyname) => {
-        var contentEncoding = null;
-        if(keyname.includes('.js') || keyname.includes('.css') || keyname.includes('.html')) {
-          contentEncoding = 'gzip';
-        }
-        return contentEncoding;
-      },
-      metadataMap: (keyname) => {
-        if(keyname.includes('.html')) {
-          return {
-            'Cache-Control': 'max-age=0'
-          };
-        } else {
-          return {
-            'Cache-Control': 'max-age=604800'
-          };
-        }
-      }
-    }));
+  gulp.src('dist/**/*.{js,css}')
+    .pipe($.awspublish.gzip())
+    .pipe(publisher.publish({
+      'Cache-Control': 'max-age:604800'
+    }))
+    .pipe(publisher.cache())
+    .pipe($.awspublish.reporter());
+
+  gulp.src('dist/*.html')
+    .pipe($.awspublish.gzip())
+    .pipe(publisher.publish({
+      'Cache-Control': 'max-age:0'
+    }))
+    .pipe(publisher.cache())
+    .pipe($.awspublish.reporter());
+
+  gulp.src(['dist/**/*', '!dist/**/*.{js,css,html}'])
+    .pipe(publisher.publish({
+      'Cache-Control': 'max-age:604800'
+    }))
+    .pipe(publisher.cache())
+    .pipe($.awspublish.reporter());
 });
