@@ -188,6 +188,15 @@ gulp.task('default', ['clean'], () => {
   gulp.start('build');
 });
 
+gulp.task('gzip', () => {
+  'use strict';
+  gulp.src(['dist/**/*.js', 'dist/**/*.css', 'dist/**/*.html'])
+    .pipe($.gzip({
+      append: false
+    }))
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('publish', () => {
   'use strict';
   gulp.src('dist/**/*')
