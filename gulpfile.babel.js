@@ -190,7 +190,7 @@ gulp.task('default', ['clean'], () => {
 
 gulp.task('publish', () => {
   'use strict';
-  gulp.src('a.text')
+  gulp.src('dist/**/*')
     .pipe($.s3Upload(awsConfig)({
       Bucket: 'www.trillionaire.co.kr', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
