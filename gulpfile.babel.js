@@ -195,7 +195,7 @@ gulp.task('publish', () => {
   gulp.src('dist/**/*.{js,css}')
     .pipe($.awspublish.gzip())
     .pipe(publisher.publish({
-      'Cache-Control': 'max-age:604800'
+      'Cache-Control': 'max-age=604800'
     }))
     .pipe(publisher.cache())
     .pipe($.awspublish.reporter());
@@ -203,14 +203,14 @@ gulp.task('publish', () => {
   gulp.src('dist/*.html')
     .pipe($.awspublish.gzip())
     .pipe(publisher.publish({
-      'Cache-Control': 'max-age:0'
+      'Cache-Control': 'max-age=0'
     }))
     .pipe(publisher.cache())
     .pipe($.awspublish.reporter());
 
   gulp.src(['dist/**/*', '!dist/**/*.{js,css,html}'])
     .pipe(publisher.publish({
-      'Cache-Control': 'max-age:604800'
+      'Cache-Control': 'max-age=604800'
     }))
     .pipe(publisher.cache())
     .pipe($.awspublish.reporter());
