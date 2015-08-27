@@ -193,11 +193,10 @@ header .header-content {
     text-align: center;
 }
 
-/*header .header-content .header-content-inner img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}*/
+header .header-content .header-content-inner img {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 header .header-content .header-content-inner hr {
     margin: 30px auto;
