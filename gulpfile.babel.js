@@ -52,7 +52,7 @@ const lintOptions = {
 gulp.task('lint', lint('app/scripts/**/*.js', lintOptions));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
-gulp.task('html', ['styles'], () => {
+gulp.task('html', ['styles', 'scripts'], () => {
   'use strict';
   const assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
 
@@ -106,7 +106,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'fonts'], () => {
+gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
   'use strict';
   browserSync({
     notify: false,
@@ -122,11 +122,13 @@ gulp.task('serve', ['styles', 'fonts'], () => {
   gulp.watch([
     'app/*.html',
     'app/scripts/**/*.js',
+    '.tmp/scripts/**/*.js',
     'app/images/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.scss', ['styles']);
+  gulp.watch('app/scripts/**/*.coffee', ['scripts']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -214,4 +216,11 @@ gulp.task('publish', () => {
     }))
     .pipe(publisher.cache())
     .pipe($.awspublish.reporter());
+});
+
+gulp.task('scripts', function () {
+  'use strict';
+  return gulp.src('app/scripts/**/*.coffee')
+    .pipe($.coffee())
+    .pipe(gulp.dest('.tmp/scripts'));
 });
