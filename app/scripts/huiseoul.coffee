@@ -1,5 +1,8 @@
-flagImageSelector = 'a[href="#global-challenger-text"] img'
+flagSelector = 'a[href="#global-challenger-text"] img'
 
-$(flagImageSelector).on 'click', ->
-  $(flagImageSelector).removeClass 'img-thumbnail'
+$(flagSelector).on 'click', ->
+  $(flagSelector).removeClass 'img-thumbnail'
   $(this).addClass 'img-thumbnail'
+
+$('#instruction-download').on 'click', ->
+  ga('send', 'event', 'download', 'pdf', '2015 Huiseoul Global Challenger Instruction & Application');
